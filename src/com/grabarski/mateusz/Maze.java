@@ -150,4 +150,8 @@ public class Maze {
             return null;
         }
     }
+
+    public void setStartPoint(Point newStartPoint) {
+        this.startPoint = newStartPoint;
+    }
 }

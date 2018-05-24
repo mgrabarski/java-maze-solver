@@ -1,6 +1,7 @@
 package com.grabarski.mateusz.controllers;
 
 import com.grabarski.mateusz.Maze;
+import com.grabarski.mateusz.Point;
 import com.grabarski.mateusz.PointType;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -35,6 +36,11 @@ public class Controller {
         maze = new Maze("maze");
 
         loadMaze();
+
+        right.setOnAction(event -> moveRight());
+        left.setOnAction(event -> moveLeft());
+        up.setOnAction(event -> moveUp());
+        down.setOnAction(event -> moveDown());
     }
 
     private void loadMaze() {
@@ -66,5 +72,42 @@ public class Controller {
                 mazeGridPane.add(button, x, y);
             }
         }
+
+        loadCurrentPosition();
+    }
+
+    private void loadCurrentPosition() {
+        Point startPoint = maze.getStartPoint();
+
+        Button startBtn = new Button();
+        startBtn.setBackground(new Background(new BackgroundFill(Color.YELLOW, CornerRadii.EMPTY, Insets.EMPTY)));
+
+        mazeGridPane.add(startBtn, startPoint.getX(), startPoint.getY());
+    }
+
+    private void moveRight() {
+        tryMove(new Point(maze.getStartPoint().getX() + 1, maze.getStartPoint().getY()));
+    }
+
+    private void moveLeft() {
+        tryMove(new Point(maze.getStartPoint().getX() - 1, maze.getStartPoint().getY()));
+    }
+
+    private void moveDown() {
+        tryMove(new Point(maze.getStartPoint().getX(), maze.getStartPoint().getY() + 1));
+    }
+
+    private void moveUp() {
+        tryMove(new Point(maze.getStartPoint().getX(), maze.getStartPoint().getY() - 1));
+    }
+
+    private void tryMove(Point checkingPoint) {
+        PointType checkingPointType = maze.getPointTypeAt(checkingPoint);
+
+        if (checkingPointType == PointType.PATH || checkingPointType == PointType.END) {
+            maze.setStartPoint(checkingPoint);
+        }
+
+        loadMaze();
     }
 }
