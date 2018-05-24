@@ -139,6 +139,10 @@ public class Maze {
         return endPoint;
     }
 
+    public PointType[][] getPoints() {
+        return points;
+    }
+
     public PointType getPointTypeAt(Point point) {
         try {
             return points[point.getY()][point.getX()];
