@@ -1,8 +1,10 @@
 package com.grabarski.mateusz.controllers;
 
 import com.grabarski.mateusz.Maze;
+import com.grabarski.mateusz.MazeSolver;
 import com.grabarski.mateusz.Point;
 import com.grabarski.mateusz.PointType;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
@@ -11,6 +13,8 @@ import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
+
+import java.util.List;
 
 /**
  * Created by Mateusz Grabarski on 24.05.2018.
@@ -41,6 +45,22 @@ public class Controller {
         left.setOnAction(event -> moveLeft());
         up.setOnAction(event -> moveUp());
         down.setOnAction(event -> moveDown());
+        resolve.setOnAction(event -> {
+            MazeSolver mazeSolver = new MazeSolver(maze);
+
+            List<Point> points = mazeSolver.solve();
+
+            new Thread(() ->
+                    points.forEach(s -> {
+                        maze.setCurrentPoint(s);
+                        try {
+                            Thread.sleep(500);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        Platform.runLater(() -> loadMaze());
+                    })).start();
+        });
     }
 
     private void loadMaze() {
@@ -105,7 +125,7 @@ public class Controller {
         PointType checkingPointType = maze.getPointTypeAt(checkingPoint);
 
         if (checkingPointType == PointType.PATH || checkingPointType == PointType.END) {
-            maze.setStartPoint(checkingPoint);
+            maze.setCurrentPoint(checkingPoint);
         }
 
         loadMaze();

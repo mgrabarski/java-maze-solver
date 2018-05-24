@@ -151,7 +151,7 @@ public class Maze {
         }
     }
 
-    public void setStartPoint(Point newStartPoint) {
+    public void setCurrentPoint(Point newStartPoint) {
         this.startPoint = newStartPoint;
     }
 }
